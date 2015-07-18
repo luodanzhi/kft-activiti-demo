@@ -101,7 +101,9 @@
         <!-- 自动部署 -->
         <property name="deploymentResources">
             <list>
+            	<!-- no auto deploy
                 <value>classpath*:/deployments/*</value>
+				 -->
             </list>
         </property>
 

@@ -1,6 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <ul id="css3menu">
 	<li class="topfirst"><a rel="main/welcome">首页</a></li>
+	
+	<li>
+		<a rel="#">车辆变更申请（普通表单）</a>
+		<ul>
+			<li><a rel="oa/vehedit/apply">变更申请(普通)</a></li>
+			<li><a rel="oa/vehedit/list/task">变更办理(普通)</a></li>
+			<li><a rel="oa/vehedit/list/running">运行中流程(普通)</a></li>
+			<li><a rel="oa/vehedit/list/finished">已结束流程(普通)</a></li>
+		</ul>
+	</li>
 	<li>
 		<a rel="#">请假（普通表单）</a>
 		<ul>
@@ -8,6 +18,15 @@
 			<li><a rel="oa/leave/list/task">请假办理(普通)</a></li>
 			<li><a rel="oa/leave/list/running">运行中流程(普通)</a></li>
 			<li><a rel="oa/leave/list/finished">已结束流程(普通)</a></li>
+		</ul>
+	</li>
+	<li>
+		<a rel="#">请假（demo表单）</a>
+		<ul>
+			<li><a rel="oa/leademo/apply">请假申请(demo)</a></li>
+			<li><a rel="oa/leademo/list/task">请假办理(demo)</a></li>
+			<li><a rel="oa/leademo/list/running">运行中流程(demo)</a></li>
+			<li><a rel="oa/leademo/list/finished">已结束流程(demo)</a></li>
 		</ul>
 	</li>
 	<li>

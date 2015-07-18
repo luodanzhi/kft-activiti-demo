@@ -42,22 +42,27 @@
 		<activiti.version>5.16</activiti.version>
         <activiti.engine.version>5.16</activiti.engine.version>
 
-		<!-- jdbc h2 -->
+		<!-- jdbc h2 
 		<jdbc.driver.groupId>com.h2database</jdbc.driver.groupId>
 		<jdbc.driver.artifactId>h2</jdbc.driver.artifactId>
 		<jdbc.driver.version>1.3.173</jdbc.driver.version>
+        -->
 
-		<!-- jdbc mysql <jdbc.driver.groupId>mysql</jdbc.driver.groupId> <jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId> 
-			<jdbc.driver.version>5.1.11</jdbc.driver.version> -->
+		<!-- jdbc mysql  -->
+		<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
+	    <jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId> 
+		<jdbc.driver.version>5.1.11</jdbc.driver.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<repositories>
+        <!--
 		<repository>
 			<id>kafeitu</id>
             <url>http://maven.kafeitu.me/nexus/content/groups/public</url>
 		</repository>
+        -->
 		<repository>
 			<id>Activiti</id>
 			<url>https://maven.alfresco.com/nexus/content/groups/public</url>
@@ -310,7 +315,8 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <!--  <version>3.1.0</version> -->
+            <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
 		<!-- WEB end -->

@@ -4,12 +4,14 @@ import static org.junit.Assert.assertNotNull;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
 
 import me.kafeitu.demo.activiti.entity.account.Group;
 import me.kafeitu.demo.activiti.entity.account.User;
 import me.kafeitu.modules.test.spring.SpringTransactionalTestCase;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -23,6 +25,12 @@ public class InitDataTest extends SpringTransactionalTestCase {
 	@PersistenceContext
 	private EntityManager em;
 	
+    @Override
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        super.setDataSource(dataSource);
+    }
+    
 	@Test
 	public void testUserData() throws Exception {
 		Group group = em.find(Group.class, "admin");
