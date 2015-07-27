@@ -4,30 +4,36 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans
 				http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
-		<property name="databaseSchemaUpdate" value="true"/>
-		
-		<!-- 引擎默认名称为default，ProcessEngines.getDefaultProcessEngine()查询时会先检索main/resources，然后再检索test/resources的
-		activiti.cfg.xml和activiti-context.xml文件，所以当main/resources监测不到指定文件时就会导致该引擎被当做web应用的引擎对象，这样会导致有两个引擎
-		所以把引擎的名称改为非默认的“default”
-		-->
-		<property name="processEngineName" value="test" />
-	</bean>
-	
 	<bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
-
-    <property name="jdbcUrl" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000" />
-    <property name="jdbcDriver" value="org.h2.Driver" />
-    <property name="jdbcUsername" value="sa" />
-    <property name="jdbcPassword" value="" />
-
-    <property name="databaseSchemaUpdate" value="true" />
-
-    <property name="jobExecutorActivate" value="false" />
-    <property name="asyncExecutorEnabled" value="true" />
-    <property name="asyncExecutorActivate" value="false" />
-
-    <property name="mailServerHost" value="mail.my-corp.com" />
-    <property name="mailServerPort" value="5025" />
-    </bean>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/workflow?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="jdbcDriver" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUsername" value="activiti"/>
+        <property name="jdbcPassword" value="activiti"/>
+        
+		<property name="databaseSchemaUpdate" value="false"/>
+		<property name="history" value="full"/>
+		
+		<property name="processEngineName" value="test" />
+		
+        <!-- 生成流程图的字体 -->
+	    <property name="activityFontName" value="宋体" />
+	    <property name="labelFontName" value="宋体" />
+	    
+		<!-- 自定义表单字段类型 -->
+		<property name="customFormTypes">
+			<list>
+				<bean class="me.kafeitu.activiti.chapter6.form.JavascriptFormType" />
+				<bean class="me.kafeitu.activiti.chapter9.form.UsersFormType" />
+				<bean class="me.kafeitu.activiti.chapter10.form.DoubleFormType" />
+				<bean class="me.kafeitu.activiti.chapter10.form.BigtextFormType" />
+			</list>
+		</property>
+		
+		<!-- 自定义表单引擎 -->
+		<property name="customFormEngines">
+			<list>
+				<bean class="me.kafeitu.activiti.chapter6.form.MyFormEngine" />
+			</list>
+		</property>
+	</bean>
 </beans>
