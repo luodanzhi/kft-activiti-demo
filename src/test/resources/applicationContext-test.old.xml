@@ -12,44 +12,26 @@
 
 	<description>Spring公共配置</description>
 
-    <context:property-placeholder ignore-unresolvable="true" local-override="true"
-                                  location="classpath*:/application.properties,classpath*:/application.local.properties"/>
-
-    <!-- 数据源配置, 使用DBCP数据库连接池 -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <!-- Connection Info -->
-        <property name="driverClassName" value="${jdbc.driver}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-
-        <!-- Connection Pooling Info -->
-        <property name="maxActive" value="${dbcp.maxActive}"/>
-        <property name="maxIdle" value="${dbcp.maxIdle}"/>
-        <property name="defaultAutoCommit" value="false"/>
-        <!-- 连接Idle一个小时后超时 -->
-        <property name="timeBetweenEvictionRunsMillis" value="3600000"/>
-        <property name="minEvictableIdleTimeMillis" value="3600000"/>
-    </bean>
-    
 	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
 	<context:component-scan base-package="me.kafeitu.demo.activiti">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
-    <!-- Jpa Entity Manager 配置 -->
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
-        <property name="packagesToScan" value="me.kafeitu.demo.activiti.entity.oa"/>
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+	<!-- Jpa Entity Manager 配置 -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<property name="packagesToScan" value="me.kafeitu.demo.activiti.entity"/>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+				<prop key="net.sf.ehcache.configurationResourceName">ehcache/ehcache-hibernate-local.xml</prop>
+				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
-            </props>
-        </property>
-    </bean>
+			</props>
+		</property>
+	</bean>
 
 	<bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
 
@@ -69,7 +51,7 @@
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="transactionManager" />
-		<property name="databaseSchemaUpdate" value="false" />
+		<property name="databaseSchemaUpdate" value="true" />
 		<property name="jobExecutorActivate" value="false" />
 		<property name="history" value="full" />
 		
@@ -93,5 +75,53 @@
 	<bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
 	<bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />
 	<!-- Activiti end -->
+	
+	<!-- production/local development环境 -->
+	<beans profile="production,development">
+		<context:property-placeholder ignore-unresolvable="true"
+			location="classpath*:/application.properties,
+          			  classpath*:/application.local.properties" />
 
+		<!-- 数据源配置, 使用DBCP数据库连接池 -->
+		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+			<!-- Connection Info -->
+			<property name="driverClassName" value="${jdbc.driver}" />
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+
+			<!-- Connection Pooling Info -->
+			<property name="maxActive" value="${dbcp.maxActive}" />
+			<property name="maxIdle" value="${dbcp.maxIdle}" />
+			<property name="defaultAutoCommit" value="false" />
+			<!-- 连接Idle一个小时后超时 -->
+			<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+			<property name="minEvictableIdleTimeMillis" value="3600000" />
+		</bean>
+	</beans>
+
+	<!-- unit test环境 -->
+	<beans profile="test">
+		<context:property-placeholder ignore-resource-not-found="true"
+			location="classpath:/application.properties,
+					  classpath:/application.test.properties,
+          			  classpath:/application.test.local.properties" />
+
+		<!-- 嵌入式内存中数据库 -->
+		<jdbc:embedded-database id="dataSource" type="H2">
+			<jdbc:script location="classpath:org/activiti/db/create/activiti.h2.create.engine.sql" />
+			<jdbc:script location="classpath:org/activiti/db/create/activiti.h2.create.history.sql" />
+			<jdbc:script location="classpath:org/activiti/db/create/activiti.h2.create.identity.sql" />
+		</jdbc:embedded-database>
+
+		<!-- 初始化默认数据 -->
+		<bean class="me.kafeitu.modules.test.data.DataInitializer" lazy-init="false">
+			<property name="dataSource" ref="dataSource" />
+			<property name="dataFile" value="/data/sample-data.xml" />
+		</bean>
+		
+		<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+			<property name="dataSource" ref="dataSource" />
+		</bean>
+	</beans>
 </beans>

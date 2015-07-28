@@ -9,16 +9,22 @@ import me.kafeitu.modules.test.spring.SpringTransactionalTestCase;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 /**
  * 请假实体管理测试
- *
+ * @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+ *  会自动回滚
  * @author HenryYan
  */
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/applicationContext-test.xml" })
-public class LeaveManagerTest extends SpringTransactionalTestCase {
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
+public class LeaveManagerTest {
 
 	@Autowired
 	private LeaveManager leaveManager;

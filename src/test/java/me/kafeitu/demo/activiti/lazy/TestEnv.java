@@ -4,19 +4,27 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;
 
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
 
 import me.kafeitu.demo.activiti.entity.oa.Leave;
 import me.kafeitu.demo.activiti.service.oa.leave.LeaveManager;
+import me.kafeitu.modules.test.spring.SpringTransactionalTestCase;
 
-@Controller
-public class TestEnv {
+@ContextConfiguration(locations = { "/applicationContext-test.xml" })
+public class TestEnv extends SpringTransactionalTestCase {
+    
     @Autowired
     private LeaveManager leaveManager;
     
-    protected void testSaveLeave() {
+    @Test
+    @Rollback(false)
+    public void testSaveLeave() {
         
         Leave leave = new Leave();
         leave.setApplyTime(new Date());
@@ -34,13 +42,18 @@ public class TestEnv {
         assertNotNull(newLeave);
     }
 
-    public static void main(String[] args){
-        new ClassPathXmlApplicationContext("applicationContext-test.xml");
-
-        //System.out.println(System.getProperty("sun.boot.class.path"));
-        //System.out.println(System.getProperty("java.ext.dirs"));
-        // System.out.println(System.getProperty("java.class.path"));
-        new TestEnv().testSaveLeave();
-    }
+    //@Test
+//    public void main(){
+//        String confFile = "applicationContext-test.xml";
+//        ConfigurableApplicationContext context 
+//                        = new ClassPathXmlApplicationContext(confFile);
+//
+//        //System.out.println(System.getProperty("sun.boot.class.path"));
+//        //System.out.println(System.getProperty("java.ext.dirs"));
+//        // System.out.println(System.getProperty("java.class.path"));
+//        TestEnv testEnv = (TestEnv) context.getBean("TestEnv");
+//
+//        testEnv.testSaveLeave();
+//    }
 
 }
