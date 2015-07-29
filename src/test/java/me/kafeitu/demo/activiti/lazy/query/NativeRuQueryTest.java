@@ -31,13 +31,14 @@ public class NativeRuQueryTest extends AbstractTest {
         }
     }
     
+    /** 查询参与的流程 */
     @Test
     public void testNativeRu() {
         NativeExecutionQuery nativeExecutionQuery = runtimeService.createNativeExecutionQuery();
 
         // native query
-        String sql = "select RES.* from ACT_RU_EXECUTION RES left join ACT_HI_TASKINST ART on ART.PROC_INST_ID_ = RES.PROC_INST_ID_ "
-                + " where ART.ASSIGNEE_ = #{userId} and ACT_ID_ is not null and IS_ACTIVE_ = 'TRUE' order by START_TIME_ desc";
+        String sql = "select distinct RES.* from ACT_RU_EXECUTION RES left join ACT_HI_TASKINST ART on ART.PROC_INST_ID_ = RES.PROC_INST_ID_ "
+                + " where ART.ASSIGNEE_ = #{userId} and ACT_ID_ is not null and IS_ACTIVE_ = '1' order by START_TIME_ desc";
 
         nativeExecutionQuery.parameter("userId", "admin" );
         List<Execution> executionList = nativeExecutionQuery.sql(sql).listPage(0, 15);

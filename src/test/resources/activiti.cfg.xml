@@ -19,6 +19,13 @@
 	    <property name="activityFontName" value="宋体" />
 	    <property name="labelFontName" value="宋体" />
 	    
+	    <!-- 自定义MyBatis映射接口 -->
+        <property name="customMybatisMappers">
+            <set>
+                <value>me.kafeitu.demo.activiti.lazy.mapper.TaskQueryMapper</value>
+            </set>
+        </property>
+        
 		<!-- 自定义表单字段类型 -->
 		<property name="customFormTypes">
 			<list>
